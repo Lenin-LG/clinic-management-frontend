@@ -1,0 +1,66 @@
+<div class="p-6">
+  <!-- Encabezado -->
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-3xl font-extrabold text-gray-800 tracking-tight">
+      🏥 Especialidades
+    </h2>
+
+    <div class="flex gap-3">
+      <button class="px-4 py-2 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white text-sm font-medium rounded-xl shadow-md transition">
+        + Nueva Especialidad
+      </button>
+    </div>
+  </div>
+
+  <!-- Loader -->
+  <div *ngIf="loading" class="text-center py-6">
+    <span class="text-green-600 font-medium">Cargando especialidades...</span>
+  </div>
+
+  <!-- Tabla -->
+  <div *ngIf="!loading && especialidades.length > 0" class="overflow-x-auto bg-white shadow rounded-xl">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gradient-to-r from-green-500 to-teal-500 text-white">
+      <tr>
+        <th class="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider">ID</th>
+        <th class="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider">Nombre</th>
+        <th class="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider">Descripción</th>
+      </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+      <tr *ngFor="let especialidad of especialidades" class="hover:bg-green-50">
+        <td class="px-6 py-4 text-sm text-gray-700">{{ especialidad.id }}</td>
+        <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ especialidad.nombre }}</td>
+        <td class="px-6 py-4 text-sm text-gray-600">{{ especialidad.descripcion }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mensaje si no hay datos -->
+  <div *ngIf="!loading && especialidades.length === 0" class="text-center py-6 text-gray-500">
+    No hay especialidades registradas.
+  </div>
+
+  <!-- Paginación -->
+  <div class="flex justify-between items-center mt-6" *ngIf="totalPages > 1">
+    <button
+      (click)="prevPage()"
+      [disabled]="currentPage === 0"
+      class="px-4 py-2 rounded-lg bg-gradient-to-r from-green-500 to-teal-500 text-white hover:from-green-600 hover:to-teal-600 disabled:opacity-50">
+      Anterior
+    </button>
+
+    <span class="text-sm text-gray-600">
+      Página {{ currentPage + 1 }} de {{ totalPages }}
+    </span>
+
+    <button
+      (click)="nextPage()"
+      [disabled]="currentPage >= totalPages - 1"
+      class="px-4 py-2 rounded-lg bg-gradient-to-r from-green-500 to-teal-500 text-white hover:from-green-600 hover:to-teal-600 disabled:opacity-50">
+      Siguiente
+    </button>
+  </div>
+</div>
+

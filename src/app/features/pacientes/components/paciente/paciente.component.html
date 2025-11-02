@@ -1,0 +1,103 @@
+<div class="container mx-auto px-6 py-8">
+  <!-- Encabezado -->
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-3xl font-extrabold text-gray-800 tracking-tight">
+      🧑‍⚕️ Pacientes
+    </h2>
+
+    <!-- Botones -->
+    <div class="flex gap-3">
+      <button (click)="toggleView()"
+              class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl shadow-md transition">
+        Cambiar a {{ viewMode === 'table' ? 'Cards' : 'Tabla' }}
+      </button>
+      <button class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-xl shadow-md transition">
+        + Nuevo Paciente
+      </button>
+    </div>
+  </div>
+
+  <!-- Estado cargando -->
+  <div *ngIf="loading" class="text-center text-gray-500 py-10">
+    ⏳ Cargando pacientes...
+  </div>
+
+  <!-- Contenido -->
+  <ng-template [ngIf]="!loading">
+    <div *ngIf="pacientes.length > 0; else emptyTpl">
+
+      <!-- Vista TABLA -->
+      <div *ngIf="viewMode === 'table'"
+           class="bg-white/70 backdrop-blur-lg rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm text-left text-gray-700">
+            <thead class="bg-gradient-to-r from-green-600 to-green-500 text-white uppercase text-xs tracking-wider">
+            <tr>
+              <th class="px-6 py-3">Nombres</th>
+              <th class="px-6 py-3">Apellidos</th>
+              <th class="px-6 py-3">DNI</th>
+              <th class="px-6 py-3">Edad</th>
+              <th class="px-6 py-3">Dirección</th>
+              <th class="px-6 py-3">Teléfono</th>
+              <th class="px-6 py-3">Correo</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+            <tr *ngFor="let paciente of pacientes" class="hover:bg-gray-50 transition">
+              <td class="px-6 py-4 font-medium text-gray-900">{{ paciente.nombres }}</td>
+              <td class="px-6 py-4 font-medium text-gray-900">{{ paciente.apellidos }}</td>
+              <td class="px-6 py-4">{{ paciente.dni }}</td>
+              <td class="px-6 py-4">{{ paciente.fechaNacimiento }}</td>
+              <td class="px-6 py-4">{{ paciente.direccion }}</td>
+              <td class="px-6 py-4">{{ paciente.telefono }}</td>
+              <td class="px-6 py-4">{{ paciente.email }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Vista CARDS -->
+      <div *ngIf="viewMode === 'cards'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div *ngFor="let paciente of pacientes"
+             class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-bold text-gray-800">{{ paciente.nombres }}</h3>
+            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">
+              {{ paciente.fechaNacimiento }} años
+            </span>
+          </div>
+          <p class="text-sm text-gray-600"><b>DNI:</b> {{ paciente.dni }}</p>
+          <p class="text-sm text-gray-600"><b>Teléfono:</b> {{ paciente.telefono }}</p>
+          <p class="text-sm text-gray-600"><b>Email:</b> {{ paciente.email }}</p>
+          <p class="text-sm text-gray-600"><b>Dirección:</b> {{ paciente.direccion }}</p>
+        </div>
+      </div>
+
+      <!-- Paginación -->
+      <div class="flex justify-between items-center p-4 mt-6 bg-gray-50 border rounded-xl">
+        <button (click)="prevPage()" [disabled]="currentPage === 0"
+                class="flex items-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-xl text-sm font-medium transition disabled:opacity-50 disabled:cursor-not-allowed">
+          ⬅ Anterior
+        </button>
+
+        <span class="text-gray-600 font-medium">
+          Página {{ currentPage + 1 }} de {{ totalPages }}
+        </span>
+
+        <button (click)="nextPage()" [disabled]="currentPage >= totalPages - 1"
+                class="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-sm font-medium shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
+          Siguiente ➡
+        </button>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- Cuando no hay pacientes -->
+  <ng-template #emptyTpl>
+    <div class="text-center text-gray-500 mt-10 bg-gray-100 py-10 rounded-xl shadow-inner">
+      <p class="text-lg font-medium">No hay pacientes registrados 🗒️</p>
+      <p class="text-sm">Puedes agregar un nuevo paciente desde el botón <b>“+ Nuevo Paciente”</b>.</p>
+    </div>
+  </ng-template>
+</div>

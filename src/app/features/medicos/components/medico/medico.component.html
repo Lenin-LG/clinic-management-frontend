@@ -1,0 +1,67 @@
+<div class="p-6">
+  <!-- Encabezado -->
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-3xl font-extrabold text-red-800 tracking-tight">
+      👨‍⚕️ Médicos
+    </h2>
+
+    <button class="px-4 py-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white text-sm font-medium rounded-xl shadow-md transition">
+      + Nuevo Médico
+    </button>
+  </div>
+
+  <!-- Loader -->
+  <div *ngIf="loading" class="text-center py-6">
+    <span class="text-red-600 font-medium">Cargando médicos...</span>
+  </div>
+
+  <!-- Tabla -->
+  <div *ngIf="!loading && medicos.length > 0" class="overflow-x-auto bg-white shadow rounded-xl">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gradient-to-r from-red-600 to-red-500 text-white">
+      <tr>
+
+        <th class="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider">Apellidos</th>
+        <th class="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider">Nombres</th>
+        <th class="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider">CMP</th>
+        <th class="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider">Especialidad</th>
+      </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+      <tr *ngFor="let medico of medicos" class="hover:bg-red-50">
+
+        <td class="px-6 py-4 text-sm text-red-900">{{ medico.apellidos }}</td>
+        <td class="px-6 py-4 text-sm font-medium text-red-900">{{ medico.nombres }}</td>
+        <td class="px-6 py-4 text-sm text-red-700">{{ medico.cmp }}</td>
+        <td class="px-6 py-4 text-sm text-red-700">{{ medico.especialidad.nombre }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mensaje si no hay datos -->
+  <div *ngIf="!loading && medicos.length === 0" class="text-center py-6 text-red-500">
+    No hay médicos registrados.
+  </div>
+
+  <!-- Paginación -->
+  <div class="flex justify-between items-center mt-6" *ngIf="totalPages > 1">
+    <button
+      (click)="prevPage()"
+      [disabled]="currentPage === 0"
+      class="px-4 py-2 rounded-lg bg-gradient-to-r from-red-600 to-red-500 text-white hover:from-red-700 hover:to-red-600 disabled:opacity-50">
+      Anterior
+    </button>
+
+    <span class="text-sm text-red-700">
+      Página {{ currentPage + 1 }} de {{ totalPages }}
+    </span>
+
+    <button
+      (click)="nextPage()"
+      [disabled]="currentPage >= totalPages - 1"
+      class="px-4 py-2 rounded-lg bg-gradient-to-r from-red-600 to-red-500 text-white hover:from-red-700 hover:to-red-600 disabled:opacity-50">
+      Siguiente
+    </button>
+  </div>
+</div>
