@@ -1,0 +1,97 @@
+<button 
+  (click)="toggle()" 
+  class="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-blue-600 text-white shadow-xl hover:bg-blue-700 transition-transform active:scale-95 flex items-center justify-center text-2xl">
+  @if (!open()) { 💬 } @else { ✕ }
+</button>
+
+@if (open()) {
+  <div class="fixed bottom-24 right-6 z-50 w-[90vw] md:w-[430px] h-[70vh] md:h-[570px] bg-white rounded-2xl shadow-2xl border flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
+
+    @if (viewMode() === 'LIST') {
+      <div class="px-6 py-4 bg-blue-600 text-white shadow-md">
+        <h2 class="text-lg font-bold">Mensajes</h2>
+      </div>
+
+      <div class="flex-1 overflow-y-auto min-h-0 max-h-full custom-scroll" (scroll)="onScroll($event)">
+        @for (c of contactos(); track c.id) {
+          <button 
+            (click)="abrirChat(c)" 
+            class="w-full px-5 py-4 text-left hover:bg-gray-50 flex items-center gap-4 border-b border-gray-100 transition-colors">
+            <div class="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center text-2xl shadow-sm">
+              {{ c.tipo === 'AI' ? '🤖' : '👤' }}
+            </div>
+            <div class="flex-1 text-left">
+              <div class="text-sm font-semibold text-gray-800">
+                {{ c.nombre }}
+              </div>
+      
+            </div>
+          </button>
+        }
+        @if (loading) {
+          <div class="py-4 text-center text-xs text-gray-400 animate-pulse">
+              Cargando más contactos...
+          </div>
+            }
+      </div>
+    }
+
+    @if (viewMode() === 'CHAT' && chatActivo()) {
+      
+      <div class="px-4 py-3 bg-blue-600 text-white flex items-center justify-between shadow-md">
+        <div class="flex items-center gap-3">
+          <button (click)="volver()" class="p-1 hover:bg-blue-500 rounded-full transition-colors">
+            <span class="text-xl">⬅</span>
+          </button>
+          <div class="flex flex-col">
+            <span class="font-bold leading-none">{{ chatActivo()?.nombre }}</span>
+            <span class="text-[10px] opacity-80 uppercase mt-1">En línea</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex-1 p-4 overflow-y-auto space-y-4 bg-[#f0f2f5]">
+        
+        @for (msg of messages(); track $index) {
+          <div 
+            class="max-w-[85%] px-4 py-2.5 rounded-2xl text-[13.5px] shadow-sm break-words whitespace-pre-line"
+            [ngClass]="{
+              'bg-blue-600 text-white ml-auto rounded-tr-none': msg.from === 'user',
+              'bg-white text-gray-800 mr-auto rounded-tl-none border border-gray-200': msg.from === 'ai'
+            }">
+            {{ msg.text }}
+          </div>
+        }
+
+        @if (sending()) {
+          <div class="flex items-center gap-1 bg-white border border-gray-200 w-16 px-3 py-4 rounded-2xl rounded-tl-none shadow-sm ml-1">
+            <div class="h-1.5 w-1.5 bg-gray-400 rounded-full animate-bounce [animation-duration:0.6s]"></div>
+            <div class="h-1.5 w-1.5 bg-gray-400 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.2s]"></div>
+            <div class="h-1.5 w-1.5 bg-gray-400 rounded-full animate-bounce [animation-duration:0.6s] [animation-delay:0.4s]"></div>
+          </div>
+        }
+      </div>
+
+      <div class="p-4 bg-white border-t flex items-end gap-2">
+        <div class="flex-1 bg-gray-100 rounded-2xl px-3 py-2 flex items-center">
+          <textarea
+            [(ngModel)]="input"
+            (keydown.enter)="$event.preventDefault(); send()"
+            [disabled]="sending()"
+            placeholder="Escribe un mensaje..."
+            rows="1"
+            class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-sm resize-none max-h-32 disabled:opacity-50">
+          </textarea>
+        </div>
+
+        <button 
+          (click)="send()" 
+          [disabled]="!input.trim() || sending()"
+          class="h-10 w-10 flex items-center justify-center bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all disabled:bg-gray-300 disabled:scale-90 active:scale-90">
+          <span class="text-lg">➤</span>
+        </button>
+      </div>
+    }
+
+  </div>
+}

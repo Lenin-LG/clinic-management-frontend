@@ -20,10 +20,12 @@
           <button
             class="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-gray-100 transition"
             (click)="toggleUserMenu()">
-            <span class="h-8 w-8 rounded-full bg-teal-700 text-white text-sm flex items-center justify-center">JD</span>
+            <span class="h-8 w-8 rounded-full bg-teal-700 text-white text-sm flex items-center justify-center">
+    {{ userInitial() }}
+  </span>
             <div class="hidden sm:block text-left">
-              <div class="text-sm font-medium text-teal-900">Miguel Moreno</div>
-              <div class="text-xs text-teal-700">Administrador</div>
+              <div class="text-sm font-medium text-teal-900">{{ userName() }}</div>
+              <div class="text-xs text-teal-700 capitalize">{{ userRole().toLowerCase() }}</div>
             </div>
             <svg class="h-4 w-4 text-teal-700" fill="currentColor">
               <path d="M7 10l5 5 5-5z"/>
@@ -33,10 +35,12 @@
           @if (userMenuOpen()) {
             <div class="absolute right-0 mt-2 w-64 rounded-xl border bg-white shadow-lg">
               <div class="flex items-center gap-3 px-4 py-3">
-                <span class="h-9 w-9 rounded-full bg-teal-700 text-white text-sm flex items-center justify-center">JD</span>
+                <span class="h-9 w-9 rounded-full bg-teal-700 text-white text-sm flex items-center justify-center">
+    {{ userInitial() }}
+  </span>
                 <div>
-                  <div class="text-sm font-semibold text-teal-900">Miguel Moreno</div>
-                  <div class="text-xs text-teal-700">Administrador</div>
+                 <div class="text-sm font-semibold text-teal-900">{{ userName() }}</div>
+                <div class="text-xs text-teal-700 capitalize">{{ userRole().toLowerCase() }}</div>
                 </div>
               </div>
               <div class="h-px bg-gray-100"></div>
@@ -103,4 +107,5 @@
       </div>
     </main>
   </div>
+  <app-chat-widget />
 </div>

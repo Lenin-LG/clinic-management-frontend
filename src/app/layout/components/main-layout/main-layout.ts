@@ -6,6 +6,7 @@ import {
 import {CommonModule} from '@angular/common';
 import {Router, RouterModule} from '@angular/router';
 import {AuthService} from '../../../core/auth/services/auth.service';
+import { ChatWidgetComponent } from '../../../features/chat/chat-widget.component';
 
 interface NavItem {
   label: string;
@@ -25,12 +26,15 @@ interface UserMenuItem {
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule,ChatWidgetComponent],
   templateUrl: './main-layout.html'
 })
 export class MainLayoutComponent {
   sidebarOpen = signal(false);
   userMenuOpen = signal(false);
+userName = signal<string>(localStorage.getItem('nombre') || 'Usuario');
+  userRole = signal<string>(localStorage.getItem('role') || 'Personal');
+  userInitial = signal<string>('');
 
   navItems = signal<NavItem[]>([
     {label: 'Dashboard', path: '/dashboard', icon: 'M3 12l2-2 4 4L21 4l2 2L9 20 3 14z'},
@@ -75,6 +79,12 @@ export class MainLayoutComponent {
     private router: Router,
     private authService: AuthService,
   ) {
+    this.userInitial.set(this.userName().charAt(0).toUpperCase());
+    const rolRaw = this.userRole();
+  if (rolRaw === rolRaw.toUpperCase()) {
+    const formatted = rolRaw.charAt(0).toUpperCase() + rolRaw.slice(1).toLowerCase();
+    this.userRole.set(formatted);
+  }
   }
 
   toggleSidebar() {

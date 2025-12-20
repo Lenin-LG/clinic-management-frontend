@@ -213,4 +213,33 @@ export class AuthUtils {
 
     return {id: dataUser.sub, name: dataUser.fullname};
   }
+  static getUsername(): string | null {
+  const token = localStorage.getItem('accessToken');
+  if (!token) return null;
+  const data = this._getDataUserToken(token);
+  return data?.name || data?.sub || null;
+}
+static getUsernameFromToken(token: string): string | null {
+  try {
+    const decoded = this._decodeToken(token);
+    // IMPORTANTE: En Spring Boot suele ser 'sub'. 
+    // Si en tu consola ves que 'sub' no es, prueba con 'username'.
+    return decoded ? (decoded.sub || decoded.username) : null;
+  } catch (e) {
+    return null;
+  }
+}
+static getRoleFromToken(token: string): string | null {
+  try {
+    const decoded = this._decodeToken(token);
+    // Como 'roles' es una lista ["DOCTOR"], tomamos el primero
+    if (decoded && decoded.roles && decoded.roles.length > 0) {
+      return decoded.roles[0];
+    }
+    return null;
+  } catch (e) {
+    return null;
+  }
+}
+
 }
